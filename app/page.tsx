@@ -9,7 +9,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// --- BAGIAN 2: TIPE DATA ---
+// --- BAGIAN 2: DEFINISI TIPE DATA ---
 interface Question {
   id: number;
   category: string;
@@ -19,7 +19,7 @@ interface Question {
   discussion: string;
 }
 
-// --- BAGIAN 3: APLIKASI ---
+// --- BAGIAN 3: APLIKASI UTAMA ---
 export default function Home() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,11 +29,12 @@ export default function Home() {
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
 
+  // Ambil Soal
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const { data, error } = await supabase
-          .from('questions')
+          .from('questions') // Pastikan nama tabel sama dengan di SQL tadi
           .select('*')
           .limit(100);
 
@@ -48,6 +49,7 @@ export default function Home() {
     fetchQuestions();
   }, []);
 
+  // Timer
   useEffect(() => {
     if (isFinished) return;
     const timer = setInterval(() => {
@@ -102,7 +104,7 @@ export default function Home() {
       <div className="flex h-screen items-center justify-center p-4 text-center">
         <div>
           <h2 className="text-xl font-bold text-red-600">Data Masih Kosong</h2>
-          <p>Cek tabel Supabase Anda (pastikan RLS sudah mati).</p>
+          <p>Cek tabel Supabase Anda (pastikan sudah di-RUN di SQL Editor).</p>
         </div>
       </div>
     );
